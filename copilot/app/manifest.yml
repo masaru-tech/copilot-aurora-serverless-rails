@@ -1,0 +1,54 @@
+# The manifest for the "app" service.
+# Read the full specification for the "Request-Driven Web Service" type at:
+# https://aws.github.io/copilot-cli/docs/manifest/rd-web-service/
+
+# Your service name will be used in naming your resources like log groups, App Runner services, etc.
+name: app
+# The "architecture" of the service you're running.
+type: Request-Driven Web Service
+
+image:
+  # Docker build arguments.
+  # For additional overrides: https://aws.github.io/copilot-cli/docs/manifest/rd-web-service/#image-build
+  build: Dockerfile
+  # Port exposed through your container to route traffic to it.
+  port: 3000
+
+http:
+ healthcheck:
+   path: /healthcheck
+   healthy_threshold: 3
+   unhealthy_threshold: 5
+   interval: 10s
+   timeout: 5s
+
+# Number of CPU units for the task.
+cpu: 1024
+# Amount of memory in MiB used by the task.
+memory: 2048
+
+# Optional fields for more advanced use-cases.
+#
+# variables:                    # Pass environment variables as key value pairs.
+#   LOG_LEVEL: info
+#
+# tags:                         # Pass tags as key value pairs.
+#   project: project-name
+
+# You can override any of the values defined above by environment.
+environments:
+  prod:
+    variables:
+      LOG_LEVEL: debug        # Log level for the "test" environment.
+      RAILS_ENV: production
+      RAILS_LOG_TO_STDOUT: true
+      RAILS_SERVE_STATIC_FILES: true
+      WEB_CONCURRENCY: 2
+      # ここから自分の環境に合わせた値にする
+      AWS_STORAGE_ACCESS_KEY_ID: your_access_key
+      AWS_STORAGE_SECRET_ACCESS_KEY: your_secret_key
+      AWS_STORAGE_REGION: your-region
+      AWS_STORAGE_BUCKET: your-bucket-name
+      AURORA_SECRETS_ARN: aurora_serverless_secret_arn
+      AURORA_RESOURCE_ARN: aurora_serverless_resource_arn
+      SECRET_KEY_BASE: your_secret_key_base

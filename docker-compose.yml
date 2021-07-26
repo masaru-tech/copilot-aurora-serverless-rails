@@ -1,0 +1,61 @@
+version: "2.4"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    stdin_open: true
+    tty: true
+    volumes:
+      - .:/app
+    ports:
+      - "3000:3000"
+    networks:
+      - sample_app
+
+  local-data-api:
+    image: koxudaxi/local-data-api
+    restart: always
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_USER: root
+      MYSQL_PASSWORD: password
+      RESOURCE_ARN: 'arn:aws:rds:us-east-1:123456789012:cluster:dummy'
+      SECRET_ARN: 'arn:aws:secretsmanager:us-east-1:123456789012:secret:dummy'
+    ports:
+      - "8080:80"
+    networks:
+      - sample_app
+
+  mysql:
+    image: mysql:5.7
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: sampledev
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./.dockerdev/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+    networks:
+      - sample_app
+
+  localstack:
+    image: localstack/localstack
+    ports:
+      - 8081:8080
+      - '4566-4583:4566-4583'
+    environment:
+      - SERVICES=s3
+      - AWS_DEFAULT_REGION=ap-northeast-1
+      - DATA_DIR=/tmp/localstack/data
+    volumes:
+      - ./.dockerdev/localstack/:/docker-entrypoint-initaws.d
+    networks:
+      - sample_app
+
+networks:
+  sample_app:

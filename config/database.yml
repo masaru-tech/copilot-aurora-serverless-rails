@@ -1,0 +1,35 @@
+# SQLite. Versions 3.8.0 and up are supported.
+#   gem install sqlite3
+#
+#   Ensure the SQLite 3 gem is defined in your Gemfile
+#   gem 'sqlite3'
+#
+default: &default
+  adapter: aurora_serverless
+  encoding: utf8mb4
+  # For details on connection pooling, see Rails configuration guide
+  # https://guides.rubyonrails.org/configuring.html#database-pooling
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  secret_arn: <%= ENV['AURORA_SECRETS_ARN'] %>
+  resource_arn: <%= ENV['AURORA_RESOURCE_ARN'] %>
+
+development:
+  <<: *default
+  secret_arn: 'arn:aws:secretsmanager:us-east-1:123456789012:secret:dummy'
+  resource_arn: 'arn:aws:rds:us-east-1:123456789012:cluster:dummy'
+  endpoint: http://local-data-api
+  database: sampledev
+
+# Warning: The database defined as "test" will be erased and
+# re-generated from your development database when you run "rake".
+# Do not set this db to the same as development or production.
+test:
+  <<: *default
+  database: sampletest
+
+production:
+  <<: *default
+  # For details on connection pooling, see Rails configuration guide
+  # https://railsguides.jp/configuring.html#データベース接続をプールする
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  database: sampleprod
