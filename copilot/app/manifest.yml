@@ -44,11 +44,4 @@ environments:
       RAILS_LOG_TO_STDOUT: true
       RAILS_SERVE_STATIC_FILES: true
       WEB_CONCURRENCY: 2
-      # ここから自分の環境に合わせた値にする
-      AWS_STORAGE_ACCESS_KEY_ID: your_access_key
-      AWS_STORAGE_SECRET_ACCESS_KEY: your_secret_key
-      AWS_STORAGE_REGION: your-region
-      AWS_STORAGE_BUCKET: your-bucket-name
-      AURORA_SECRETS_ARN: aurora_serverless_secret_arn
-      AURORA_RESOURCE_ARN: aurora_serverless_resource_arn
-      SECRET_KEY_BASE: your_secret_key_base
+      AWS_STORAGE_REGION: ap-northeast-1
