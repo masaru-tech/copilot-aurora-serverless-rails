@@ -50,6 +50,7 @@ phases:
             sed -i -e "109i \              - Name: SECRET_KEY_BASE\n                Value: '"$SECRET_KEY_BASE"'" ./infrastructure/$svc-$env.stack.yml
             sed -i -e "109i \              - Name: AURORA_SECRETS_ARN\n                Value: { 'Fn::ImportValue': '"$env"AuroraSecretArn' }" ./infrastructure/$svc-$env.stack.yml
             sed -i -e "109i \              - Name: AURORA_RESOURCE_ARN\n                Value: { 'Fn::ImportValue': '"$env"AuroraClusterArn' }" ./infrastructure/$svc-$env.stack.yml
+            sed -i -e "109i \              - Name: AWS_STORAGE_BUCKET\n                Value: { 'Fn::ImportValue': '"$env"BucketName' }" ./infrastructure/$svc-$env.stack.yml
           fi
           done;
           for job in $jobs; do

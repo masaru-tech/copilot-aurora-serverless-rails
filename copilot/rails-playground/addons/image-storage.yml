@@ -75,6 +75,8 @@ Outputs:
   imagestorageName:
     Description: "The name of a user-defined bucket."
     Value: !Ref imagestorage
+    Export:
+      Name: !Sub '${Env}BucketName'
   imagestorageAccessPolicy:
     Description: "The IAM::ManagedPolicy to attach to the task role"
     Value: !Ref imagestorageAccessPolicy
