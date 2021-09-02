@@ -3,6 +3,8 @@ version: 0.2
 env:
   parameter-store:
     SECRET_KEY_BASE: /copilot/sampleapp/prod/secrets/SECRET_KEY_BASE
+    AWS_STORAGE_ACCESS_KEY_ID: /copilot/sampleapp/prod/secrets/AWS_STORAGE_ACCESS_KEY_ID
+    AWS_STORAGE_SECRET_ACCESS_KEY: /copilot/sampleapp/prod/secrets/AWS_STORAGE_SECRET_ACCESS_KEY
 
 phases:
   install:
@@ -48,6 +50,8 @@ phases:
           ./copilot-linux svc package -n $svc -e $env --output-dir './infrastructure' --tag $tag;
           if [ "$svc" = "app" ]; then
             sed -i -e "109i \              - Name: SECRET_KEY_BASE\n                Value: '"$SECRET_KEY_BASE"'" ./infrastructure/$svc-$env.stack.yml
+            sed -i -e "109i \              - Name: AWS_STORAGE_ACCESS_KEY_ID\n                Value: '"$AWS_STORAGE_ACCESS_KEY_ID"'" ./infrastructure/$svc-$env.stack.yml
+            sed -i -e "109i \              - Name: AWS_STORAGE_SECRET_ACCESS_KEY\n                Value: '"$AWS_STORAGE_SECRET_ACCESS_KEY"'" ./infrastructure/$svc-$env.stack.yml
             sed -i -e "109i \              - Name: AURORA_SECRETS_ARN\n                Value: { 'Fn::ImportValue': '"$env"AuroraSecretArn' }" ./infrastructure/$svc-$env.stack.yml
             sed -i -e "109i \              - Name: AURORA_RESOURCE_ARN\n                Value: { 'Fn::ImportValue': '"$env"AuroraClusterArn' }" ./infrastructure/$svc-$env.stack.yml
             sed -i -e "109i \              - Name: AWS_STORAGE_BUCKET\n                Value: { 'Fn::ImportValue': '"$env"BucketName' }" ./infrastructure/$svc-$env.stack.yml
