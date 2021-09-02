@@ -126,9 +126,13 @@ Outputs:
   auroraResourceArn:
     Description: "Aurora Serverless Resource ARN"
     Value: !Sub 'arn:aws:rds:${AWS::Region}:${AWS::AccountId}:cluster:${mysqlDBCluster}'
+    Export:
+      Name: !Sub '${Env}AuroraClusterArn'
   auroraSecretsArn: # injected as MYSQL_SECRET environment variable by Copilot.
     Description: "The JSON secret that holds the database username and password. Fields are 'host', 'port', 'dbname', 'username', 'password', 'dbClusterIdentifier' and 'engine'"
     Value: !Ref mysqlAuroraSecret
+    Export:
+      Name: !Sub '${Env}AuroraSecretArn'
   mysqlSecurityGroup:
     Description: "The security group to attach to the workload."
     Value: !Ref mysqlSecurityGroup
