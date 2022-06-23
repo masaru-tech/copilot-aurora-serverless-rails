@@ -20,7 +20,7 @@ jobs:
         run: |
           for image in `find app/assets/images -type f -not -name '\.keep'`; do
             echo $image
-            RESULR=${git grep --name-only image_tag ${GITHUB_WORKSPACE}}
+            RESULR=$(git grep --name-only image_tag ${GITHUB_WORKSPACE})
             echo $RESULT
             RESULT=$(git grep --name-only ${image#app\/assets\/images\/} ${GITHUB_WORKSPACE})
             echo $RESULT
