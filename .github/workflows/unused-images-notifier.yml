@@ -1,0 +1,26 @@
+name: Find Unused Images
+on:
+  pull_request:
+jobs:
+  find_unused_images:
+    runs-on: ubuntu-latest
+    if: ${{ github.actor != 'dependabot[bot]' }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - uses: reviewdog/action-setup@v1
+        with:
+          reviewdog_version: latest
+
+      - name: Check Unused Images
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          for image in `find app/assets/images -type f -not -name '\.keep'`; do
+            RESULT=$(git grep --name-only ${image#app\/assets\/images\/} .)
+            if [ -n "$RESULT" ]; then
+              echo "${image}:0:0: 利用されていない画像のようです。不要なら削除しましょう。"
+            fi
+          done | reviewdog -efm="%f:-:-: %m" -reporter="github-pr-review"
