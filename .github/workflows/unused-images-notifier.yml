@@ -20,7 +20,7 @@ jobs:
         run: |
           for image in `find app/assets/images -type f -not -name '\.keep'`; do
             echo $image
-            RESULT=$(git grep --name-only ${image#app\/assets\/images\/} .)
+            RESULT=$(git grep --name-only ${image#app\/assets\/images\/} ${GITHUB_WORKSPACE})
             echo $RESULT
             if [ -n "$RESULT" ]; then
               echo "${image}:0:0: 利用されていない画像のようです。不要なら削除しましょう。"
