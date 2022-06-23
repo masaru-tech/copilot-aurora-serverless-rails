@@ -6,27 +6,21 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.actor != 'dependabot[bot]' }}
     steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
       - uses: reviewdog/action-setup@v1
         with:
           reviewdog_version: latest
-
-      - uses: actions/checkout@v2
-
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
 
       - name: Check Unused Images
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           for image in `find app/assets/images -type f -not -name '\.keep'`; do
-            echo $image
-            RESULR=$(git grep --name-only image_tag)
-            echo $RESULT
-            echo $(pwd)
-            RESULT=$(git grep --name-only ${image#app\/assets\/images\/} ${GITHUB_WORKSPACE})
-            echo $RESULT
-            if [ -v "$RESULT" ]; then
+            RESULT=$(git grep --name-only ${image#app\/assets\/images\/})
+            if [ "$RESULT" == '' ]; then
               echo "${image}:0:0: 利用されていない画像のようです。不要なら削除しましょう。"
             fi
-          done
+          done | reviewdog -efm="%f:-:-: %m" -reporter="github-pr-review"
