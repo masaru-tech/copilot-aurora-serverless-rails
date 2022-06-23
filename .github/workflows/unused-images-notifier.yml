@@ -25,4 +25,4 @@ jobs:
             if [ -n "$RESULT" ]; then
               echo "${image}:0:0: 利用されていない画像のようです。不要なら削除しましょう。"
             fi
-          done | reviewdog -efm="%f:-:-: %m" -reporter="github-pr-review"
+          done
