@@ -11,8 +11,6 @@ jobs:
           reviewdog_version: latest
 
       - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
 
       - name: Check Unused Images
         env:
